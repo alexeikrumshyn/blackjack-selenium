@@ -54,6 +54,12 @@ App.updatePlayer = function (player) {
     $('#playerScore').text(player.score);
 }
 
+App.updateAIPlayer = function (aiPlayer) {
+    var html = App.getCardsHtml(aiPlayer.cards)
+    $('#aiPlayerCards').html(html);
+    $('#aiPlayerScore').text(aiPlayer.score);
+}
+
 App.updateDealer = function (dealer) {
     var html = App.getCardsHtml(dealer.cards);
     $('#dealerCards').html(html);
@@ -97,12 +103,14 @@ App.enableDealIfGameFinished = function (result) {
 App.dealResult = function (game) {
     App.disableDeal();
     App.updateDealer(game.dealer);
+    App.updateAIPlayer(game.ai)
     App.updatePlayer(game.player);
     App.updateResult(game.result);
 }
 
 App.hitResult = function (game) {
     App.updateDealer(game.dealer);
+    App.updateAIPlayer(game.ai)
     App.updatePlayer(game.player);
     App.updateResult(game.result);
     App.enableDealIfGameFinished(game.result);
@@ -110,6 +118,7 @@ App.hitResult = function (game) {
 
 App.standResult = function (game) {
     App.updateDealer(game.dealer);
+    App.updateAIPlayer(game.ai)
     App.updatePlayer(game.player);
     App.updateResult(game.result);
     App.enableDealIfGameFinished(game.result);

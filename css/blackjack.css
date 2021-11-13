@@ -16,6 +16,14 @@ h1 {
     min-height:  20px;
 }
 
+#aiPlayerCards {
+    min-height: 60px;
+}
+
+#aiPlayerScore {
+    min-height: 20px;
+}
+
 #playerCards {
     min-height: 60px;
 }
