@@ -38,9 +38,13 @@ App.getRankHtml = function (rank) {
     return rank;
 }
 
-App.getCardsHtml = function (cards) {
+App.getCardsHtml = function (cards, result) {
     var html = '';
     for (var i = 0; i < cards.length; i++) {
+        if (i === 0 && result === 'None' && result !== 'player' ) {
+            html += '??'; //hide first card if game not over yet or human player's cards
+            continue;
+        }
         var card = cards[i];
         html += App.getRankHtml(card.rank);
         html += App.getSuitHtml(card.suit);
@@ -49,19 +53,19 @@ App.getCardsHtml = function (cards) {
 }
 
 App.updatePlayer = function (player) {
-    var html = App.getCardsHtml(player.cards);
+    var html = App.getCardsHtml(player.cards, 'player');
     $('#playerCards').html(html);
     $('#playerScore').text(player.score);
 }
 
-App.updateAIPlayer = function (aiPlayer) {
-    var html = App.getCardsHtml(aiPlayer.cards)
+App.updateAIPlayer = function (aiPlayer, result) {
+    var html = App.getCardsHtml(aiPlayer.cards, result)
     $('#aiPlayerCards').html(html);
     $('#aiPlayerScore').text(aiPlayer.score);
 }
 
-App.updateDealer = function (dealer) {
-    var html = App.getCardsHtml(dealer.cards);
+App.updateDealer = function (dealer, result) {
+    var html = App.getCardsHtml(dealer.cards, result);
     $('#dealerCards').html(html);
     $('#dealerScore').text(dealer.score);
 }
@@ -102,23 +106,23 @@ App.enableDealIfGameFinished = function (result) {
 
 App.dealResult = function (game) {
     App.disableDeal();
-    App.updateDealer(game.dealer);
-    App.updateAIPlayer(game.ai)
+    App.updateDealer(game.dealer, game.result);
+    App.updateAIPlayer(game.ai, game.result)
     App.updatePlayer(game.player);
     App.updateResult(game.result);
 }
 
 App.hitResult = function (game) {
-    App.updateDealer(game.dealer);
-    App.updateAIPlayer(game.ai)
+    App.updateDealer(game.dealer, game.result);
+    App.updateAIPlayer(game.ai, game.result)
     App.updatePlayer(game.player);
     App.updateResult(game.result);
     App.enableDealIfGameFinished(game.result);
 }
 
 App.standResult = function (game) {
-    App.updateDealer(game.dealer);
-    App.updateAIPlayer(game.ai)
+    App.updateDealer(game.dealer, game.result);
+    App.updateAIPlayer(game.ai, game.result)
     App.updatePlayer(game.player);
     App.updateResult(game.result);
     App.enableDealIfGameFinished(game.result);
