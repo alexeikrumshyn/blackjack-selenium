@@ -128,6 +128,10 @@ App.standResult = function (game) {
     App.enableDealIfGameFinished(game.result);
 }
 
+App.aiPlayResult = function (game) {
+    App.updateAIPlayer(game.ai, game.result)
+}
+
 App.socket = {}
 
 App.registerClientActions = function () {
@@ -154,6 +158,9 @@ App.registerServerActions = function () {
     });
     App.socket.on('hit', function (game) {
         App.hitResult(game);
+    });
+    App.socket.on('ai', function (game) {
+        App.aiPlayResult(game);
     });
 }
 

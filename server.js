@@ -24,16 +24,20 @@ Server.deal = function (socket, data) {
 Server.hit = function (socket, data) {
     console.log('hit');
     Server.getGame(socket, data, function (socket, game) {
-        game.hit();
+        game.hit('player');
         socket.emit('hit', game.toJson());
+        game.aiTurn(false);
+        socket.emit('ai', game.toJson());
     });
 }
 
 Server.stand = function (socket, data) {
     console.log('stand');
     Server.getGame(socket, data, function (socket, game) {
-        game.stand();
+        game.stand('player');
         socket.emit('stand', game.toJson());
+        game.aiTurn(true);
+        socket.emit('ai', game.toJson());
     });
 }
 
