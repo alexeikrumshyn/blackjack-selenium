@@ -62,6 +62,11 @@ App.updateAIPlayer = function (aiPlayer, result) {
     var html = App.getCardsHtml(aiPlayer.cards, result)
     $('#aiPlayerCards').html(html);
     $('#aiPlayerScore').text(aiPlayer.score);
+    if (aiPlayer.status !== 'None') {
+        $('#aiStatus').text(aiPlayer.status);
+    } else {
+        $('#aiStatus').text('');
+    }
 }
 
 App.updateDealer = function (dealer, result) {
