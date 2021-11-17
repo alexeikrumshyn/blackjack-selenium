@@ -5,13 +5,18 @@
   "description": "",
   "main": "./server.js",
   "keywords": [],
+  "scripts": {
+    "test": "jest"
+  },
   "dependencies": {
+    "jest": "^27.3.1",
+    "selenium-webdriver": "^4.0.0",
     "socket.io": "0.9.x"
   },
   "noAnalyze": true,
   "engines": {
     "node": ">=0.6"
-  },  
+  },
   "devDependencies": {},
   "optionalDependencies": {}
 }
