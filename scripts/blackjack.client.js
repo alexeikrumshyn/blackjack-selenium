@@ -42,12 +42,14 @@ App.getCardsHtml = function (cards, result) {
     var html = '';
     for (var i = 0; i < cards.length; i++) {
         if (i === 0 && result === 'None' && result !== 'player' ) {
-            html += '??'; //hide first card if game not over yet or human player's cards
+            html += '?? '; //hide first card if game not over yet or human player's cards
             continue;
         }
         var card = cards[i];
         html += App.getRankHtml(card.rank);
-        html += App.getSuitHtml(card.suit);
+        html += card.suit;
+        html += " ";
+        //html += App.getSuitHtml(card.suit);
     }
     return html;
 }
