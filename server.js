@@ -43,10 +43,10 @@ Server.stand = function (socket, data) {
     });
 }
 
-Server.rigHand = function (player, hand) {
-    console.log('rig ' + player + ' hand')
+Server.rigHands = function (player, ai, dealer) {
+    console.log('rigging hands')
     Server.getGame(globalSocket, null, function(socket, game) {
-        game.rigHand(player, hand)
+        game.rigHands(player, ai, dealer)
         console.log(game)
         globalSocket.emit('test', game.toJson());
     });
@@ -109,7 +109,7 @@ module.exports = {
     //    // Close the server
     //    await httpServer.close()
     //},
-    rigHand: function (player, hand) {
-        Server.rigHand(player, hand)
+    rigHands: function (player, ai, dealer) {
+        Server.rigHands(player, ai, dealer)
     }
 };

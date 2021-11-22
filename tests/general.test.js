@@ -21,13 +21,15 @@ describe('general tests', () => {
         //await driver.findElement(By.id('deal')).click();
     });
  
-    afterEach(() => {
-        driver.navigate().refresh();
+    afterEach(async () => {
+        await driver.navigate().refresh();
     });
 
     afterAll(() => {
         driver.quit();
     });
+
+    /*-----GENERAL TESTS-----*/
  
     test('initial deal', async () => {
         let dealer = await driver.wait(until.elementLocated(By.id('dealerCards')),10000);
@@ -75,27 +77,46 @@ describe('general tests', () => {
         })
     });
 
-    /*HUMAN PLAYER TESTS*/
+    /*-----HUMAN PLAYER TESTS-----*/
 
     test('test bust and lose', async () => {
-        await server.rigHand('player', [10,11]); //start with 21
+        await server.rigHands([10,11], [1,2], [4,5]); //start with 21
         await driver.findElement(By.id('hit')).click(); //will go over 21
         
-        let cards = await driver.wait(until.elementLocated(By.id('result')),10000);
-        cards.getText().then(async (text) => {
+        let res = await driver.wait(until.elementLocated(By.id('result')),10000);
+        res.getText().then(async (text) => {
             expect(text).toEqual("You Busted");
         });
     });
 
     test('test hit without bust', async () => {
-        await server.rigHand('player', [2,3]); //start with 5
+        await server.rigHands([2,3], [6,5], [9,10]); //start with 5
         await driver.findElement(By.id('hit')).click(); //will never go over 21
         
-        let cards = await driver.wait(until.elementLocated(By.id('result')),10000);
-        cards.getText().then(async (text) => {
+        let res = await driver.wait(until.elementLocated(By.id('result')),10000);
+        res.getText().then(async (text) => {
             expect(text).toEqual(""); //Nothing if game is ongoing
         });
     });
 
+    test('test stand and beat dealer', async () => {
+        await server.rigHands([10,11], [5,6], [8,9]);
+        
+        await driver.findElement(By.id('stand')).click();
+        let res = await driver.wait(until.elementLocated(By.id('result')),10000);
+        res.getText().then(async (text) => {
+            expect(text).toEqual("You Win");
+        });
+    });
+
+    test('test stand and lose to dealer', async () => {
+        await server.rigHands([8,9], [5,6], [10,11]);
+        
+        await driver.findElement(By.id('stand')).click();
+        let res = await driver.wait(until.elementLocated(By.id('result')),10000);
+        res.getText().then(async (text) => {
+            expect(text).toEqual("You Lose");
+        });
+    });
 
 });
