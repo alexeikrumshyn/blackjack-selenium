@@ -6,17 +6,19 @@ describe('general tests', () => {
         until
     } = require('selenium-webdriver');
     var driver;
+    var server = require("../server.js")
  
     beforeEach(async () => {
         await driver.findElement(By.id('deal')).click();
     });
 
     beforeAll(async () => {
+        await server.start();
         driver = new Builder()
             .forBrowser('chrome')
             .build();
         await driver.get('http://localhost:3000');
-        await driver.findElement(By.id('deal')).click();
+        //await driver.findElement(By.id('deal')).click();
     });
  
     afterEach(() => {
@@ -72,4 +74,28 @@ describe('general tests', () => {
             expect(isEnabled).toEqual(true); //deal button must be enabled to start new game
         })
     });
+
+    /*HUMAN PLAYER TESTS*/
+
+    test('test bust and lose', async () => {
+        await server.rigHand('player', [10,11]); //start with 21
+        await driver.findElement(By.id('hit')).click(); //will go over 21
+        
+        let cards = await driver.wait(until.elementLocated(By.id('result')),10000);
+        cards.getText().then(async (text) => {
+            expect(text).toEqual("You Busted");
+        });
+    });
+
+    test('test hit without bust', async () => {
+        await server.rigHand('player', [2,3]); //start with 5
+        await driver.findElement(By.id('hit')).click(); //will never go over 21
+        
+        let cards = await driver.wait(until.elementLocated(By.id('result')),10000);
+        cards.getText().then(async (text) => {
+            expect(text).toEqual(""); //Nothing if game is ongoing
+        });
+    });
+
+
 });

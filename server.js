@@ -1,9 +1,11 @@
+const { verify } = require('crypto');
 var http = require('http'),
     fs = require('fs'),
     url = require('url'),
     blackjack = require('./lib/blackjack');
 
 var Server = {}
+var globalSocket;
 
 Server.getGame = function (socket, data, callback) {
     socket.get('game', function (err, game) {
@@ -41,9 +43,19 @@ Server.stand = function (socket, data) {
     });
 }
 
+Server.rigHand = function (player, hand) {
+    console.log('rig ' + player + ' hand')
+    Server.getGame(globalSocket, null, function(socket, game) {
+        game.rigHand(player, hand)
+        console.log(game)
+        globalSocket.emit('test', game.toJson());
+    });
+}
+
 Server.registerSocketIO = function (io) {
     io.sockets.on('connection', function (socket) {
         console.log('User connected');
+        globalSocket = socket;
         socket.set('game', blackjack.newGame())
 
         socket.on('deal', function (data) {
@@ -89,3 +101,15 @@ Server.init = function () {
 Server.init();
 
 
+module.exports = {
+    start: function () {
+        Server.init();
+    },
+    //kill: async function () {
+    //    // Close the server
+    //    await httpServer.close()
+    //},
+    rigHand: function (player, hand) {
+        Server.rigHand(player, hand)
+    }
+};

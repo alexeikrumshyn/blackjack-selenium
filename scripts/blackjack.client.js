@@ -139,6 +139,14 @@ App.aiPlayResult = function (game) {
     App.updateAIPlayer(game.ai, game.result)
 }
 
+App.rigHand = function (game) {
+    App.updateDealer(game.dealer, game.result);
+    App.updateAIPlayer(game.ai, game.result)
+    App.updatePlayer(game.player);
+    App.updateResult(game.result);
+    App.enableDealIfGameFinished(game.result);
+}
+
 App.socket = {}
 
 App.registerClientActions = function () {
@@ -168,6 +176,9 @@ App.registerServerActions = function () {
     });
     App.socket.on('ai', function (game) {
         App.aiPlayResult(game);
+    });
+    App.socket.on('test', function (game) {
+        App.rigHand(game);
     });
 }
 

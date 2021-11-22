@@ -6,7 +6,7 @@
   "main": "./server.js",
   "keywords": [],
   "scripts": {
-    "test": "jest"
+    "test": "jest --forceExit"
   },
   "dependencies": {
     "jest": "^27.3.1",
