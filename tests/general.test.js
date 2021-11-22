@@ -149,6 +149,16 @@ describe('general tests', () => {
         });
     });
 
+    test('test 7-card charlie', async () => {
+        await server.rigHands([1,1,2,2,1,2,1], [1,2], [4,5]);
+
+        await driver.findElement(By.id('stand')).click();
+        let res = await driver.wait(until.elementLocated(By.id('result')),10000);
+        res.getText().then(async (text) => {
+            expect(text).toEqual("Charlie - You Win");
+        });
+    });
+
     /*-----AI PLAYER TESTS-----*/
 
     test('AI bust and lose', async () => {
@@ -160,6 +170,28 @@ describe('general tests', () => {
             expect(text).toEqual("Busted");
         });
     });
+
+    test('AI hand has 21', async () => {
+        await server.rigHands([2,3], [0,9], [4,5]);
+
+        await driver.findElement(By.id('hit')).click();
+        let res = await driver.wait(until.elementLocated(By.id('aiPlayerCards')),10000);
+        res.getText().then(async (text) => {
+            expect(text.split(" ").length).toEqual(2);
+        });
+    });
+
+    test('AI 7-card charlie', async () => {
+        await server.rigHands([1,2], [2,1,3,1,2,3,1], [4,5]);
+
+        await driver.findElement(By.id('stand')).click();
+        let res = await driver.wait(until.elementLocated(By.id('aiStatus')),10000);
+        res.getText().then(async (text) => {
+            expect(text).toEqual("CPU Charlie");
+        });
+    });
+
+    
 
     /*-----DEALER BEHAVIOUR TESTS-----*/
 
