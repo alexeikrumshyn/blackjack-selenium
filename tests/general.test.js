@@ -119,4 +119,88 @@ describe('general tests', () => {
         });
     });
 
+    test('test stand and beat dealer when points both 21', async () => {
+        await server.rigHands([1,10], [5,6], [6,6,9]);
+        
+        await driver.findElement(By.id('stand')).click();
+        let res = await driver.wait(until.elementLocated(By.id('result')),10000);
+        res.getText().then(async (text) => {
+            expect(text).toEqual("You Win");
+        });
+    });
+
+    test('test stand and lose to dealer when points both 21', async () => {
+        await server.rigHands([3,4,5,5], [5,6], [0,9]);
+        
+        await driver.findElement(By.id('stand')).click();
+        let res = await driver.wait(until.elementLocated(By.id('result')),10000);
+        res.getText().then(async (text) => {
+            expect(text).toEqual("You Lose");
+        });
+    });
+
+    test('test player and dealer push', async () => {
+        await server.rigHands([0,7], [5,6], [0,7]);
+        
+        await driver.findElement(By.id('stand')).click();
+        let res = await driver.wait(until.elementLocated(By.id('result')),10000);
+        res.getText().then(async (text) => {
+            expect(text).toEqual("Push");
+        });
+    });
+
+    /*-----AI PLAYER TESTS-----*/
+
+    test('AI bust and lose', async () => {
+        await server.rigHands([1,2], [10,11,4], [4,5]);
+
+        await driver.findElement(By.id('hit')).click();
+        let res = await driver.wait(until.elementLocated(By.id('aiStatus')),10000);
+        res.getText().then(async (text) => {
+            expect(text).toEqual("Busted");
+        });
+    });
+
+    /*-----DEALER BEHAVIOUR TESTS-----*/
+
+    test('dealer hand < 18', async () => {
+        await server.rigHands([3,2], [6,7], [4,5]);
+
+        await driver.findElement(By.id('stand')).click();
+        let res = await driver.wait(until.elementLocated(By.id('dealerCards')),10000);
+        res.getText().then(async (text) => {
+            expect(text.split(" ").length).toBeGreaterThan(2);
+        });
+    });
+
+    test('dealer hand >= 18', async () => {
+        await server.rigHands([3,2], [6,7], [10,10]);
+
+        await driver.findElement(By.id('stand')).click();
+        let res = await driver.wait(until.elementLocated(By.id('dealerCards')),10000);
+        res.getText().then(async (text) => {
+            expect(text.split(" ").length).toEqual(2);
+        });
+    });
+
+    test('dealer hand == 18 with ace', async () => {
+        await server.rigHands([3,2], [6,7], [1,5,2]);
+
+        await driver.findElement(By.id('stand')).click();
+        let res = await driver.wait(until.elementLocated(By.id('dealerCards')),10000);
+        res.getText().then(async (text) => {
+            expect(text.split(" ").length).toBeGreaterThan(2);
+        });
+    });
+
+    test('dealer hand == 18 without ace', async () => {
+        await server.rigHands([3,2], [6,7], [9,9]);
+
+        await driver.findElement(By.id('stand')).click();
+        let res = await driver.wait(until.elementLocated(By.id('dealerCards')),10000);
+        res.getText().then(async (text) => {
+            expect(text.split(" ").length).toEqual(2);
+        });
+    });
+
 });
